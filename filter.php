@@ -36,12 +36,15 @@ class filter_vimeodonottrack extends moodle_text_filter {
      * @see filter_manager::apply_filter_chain()
      */
     public function filter($text, array $options = array()) {
-        if (strpos($text, 'https://vimeo.com') === false) {
+        if (
+                strpos($text, 'https://vimeo.com') === false
+                &&
+                strpos($text, 'https://player.vimeo.com') === false) {
             return $text;
         }
 
         $matches = [];
-        preg_match_all('|https://vimeo.com/[0-9a-z?#=&/]+|', $text, $matches);
+        preg_match_all('|https://[a-z.]*vimeo.com/[0-9a-z?#=&/]+|', $text, $matches);
         foreach (array_unique($matches[0]) as $url) {
             if (strpos($url, 'dnt=1') !== false) {
                 continue;
